@@ -2,31 +2,42 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 )
 
-func inputHandler(w http.ResponseWriter, r *http.Request) {
+type Banner struct {
+	Title string
+	Ban1  string
+	Ban2  string
+	Ban3  string
+}
+
+func indexHandler(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		fmt.Fprintf(w, "ParseForm() err: %v", err)
 		return
 	}
-	entertext := r.FormValue("entertext")
 
-	fmt.Fprintf(w, "UserInput = %s\n", entertext)
+	fmt.Fprintf(w, "<h1>Step by Step</h1>")
+}
+
+func bannerHandler(w http.ResponseWriter, r *http.Request) {
+	p := Banner{Title: "SELECT BANNERFILE\n", Ban1: "Shadow\n", Ban2: "Standard\n", Ban3: "Thinkertoy\n"}
+	t, _ := template.ParseFiles("index.html")
+	t.Execute(w, p)
 }
 
 func main() {
 	// opening a port and listening for instructions
-	server := http.FileServer(http.Dir("./static"))
+	//server := http.FileServer(http.Dir("./static"))
 
-	http.Handle("/", server)
-	http.HandleFunc("/results", inputHandler)
+	http.HandleFunc("/", indexHandler)
+	http.HandleFunc("/", bannerHandler)
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal(err)
-		///dd
 
-		//??jdsbkv
 	}
 }
