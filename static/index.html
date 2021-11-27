@@ -1,0 +1,27 @@
+<!DOCTYPE html>  
+<html>			
+
+	<head>			
+	 <meta charset="utf-8">
+         <form id="bannerHeader" action="/banner" method="POST">
+
+
+        <p id=form-prompt>{{.Title}}</p>
+
+<input type="radio" id="ban1"
+name="banner" value="ban1">
+<label for="ban1">{{.Ban1}}</label><br>
+
+<input type="radio" id="ban2"
+name="banner" value="ban2">
+<label for="ban1">{{.Ban2}}</label><br>
+
+<input type="radio" id="ban3"
+name="banner" value="ban3">
+<label for="ban3">{{.Ban3}}</label>
+
+<div><button type="submit">Submit</button></div>
+</form>
+
+</head>
+</html>			

@@ -14,6 +14,17 @@ type Banner struct {
 	Ban3  string
 }
 
+func bannerHandler(w http.ResponseWriter, r *http.Request) {
+	p := Banner{
+		Title: "SELECT BANNERFILE\n",
+		Ban1:  "Shadow\n",
+		Ban2:  "Standard\n",
+		Ban3:  "Thinkertoy\n",
+	}
+	t, _ := template.ParseFiles("static/index.html")
+	t.Execute(w, p)
+}
+
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		fmt.Fprintf(w, "ParseForm() err: %v", err)
@@ -23,18 +34,12 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "<h1>Step by Step</h1>")
 }
 
-func bannerHandler(w http.ResponseWriter, r *http.Request) {
-	p := Banner{Title: "SELECT BANNERFILE\n", Ban1: "Shadow\n", Ban2: "Standard\n", Ban3: "Thinkertoy\n"}
-	t, _ := template.ParseFiles("index.html")
-	t.Execute(w, p)
-}
-
 func main() {
 	// opening a port and listening for instructions
 	//server := http.FileServer(http.Dir("./static"))
 
 	http.HandleFunc("/", indexHandler)
-	http.HandleFunc("/", bannerHandler)
+	http.HandleFunc("/banner", bannerHandler)
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal(err)
