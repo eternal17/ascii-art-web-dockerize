@@ -3,11 +3,13 @@
 
 	<head>			
 	 <meta charset="utf-8">
-         <div>
-         <form id="bannerHeader" action="/ascii-art" method="GET">
 
-        <p id=form-prompt>{{.Title}}</p>
-
+         <form id="bannerHeader" action="/ascii-art" method="POST">
+                 
+                 <p id=form-prompt>{{.Title}}</p>
+                </head>
+                
+                <div>
 <input type="radio" id="ban1"
 name="banner" value={{.Ban1}}>
 <label for="ban1">{{.Ban1}}</label><br>
@@ -20,11 +22,11 @@ name="banner" value={{.Ban2}}>
 name="banner" value={{.Ban3}}>
 <label for="ban3">{{.Ban3}}</label><br>
 
-<input type="text" name="textbox" action="/ascii-art" method = "GET">
+<input type="text" name="textbox" action="/ascii-art" method = "POST">
 
         <!-- <input type = "submit">  -->
 <input type= "submit" value="SUBMIT"/>
 </form>
 </div>
-</head>
+
 </html>			

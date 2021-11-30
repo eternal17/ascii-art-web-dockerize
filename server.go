@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 )
 
 type Banner struct {
@@ -73,14 +75,52 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 		ban3:    getban3,
 		textbox: tbox,
 	}
+	//********************************************************
+	z := (testReturn.ban1 + ".txt")
+	fmt.Println(z)
 
-	fmt.Printf("%v", testReturn)
-	fmt.Fprintf(w, testReturn.textbox)
+	file, err := os.Open("standard.txt")
+	if err != nil {
+		fmt.Println("Usage: go run . [STRING] [BANNER]")
+		fmt.Println("EX: go run . something standard")
+		os.Exit(0)
+	}
+	defer file.Close()
+
+	scanned := bufio.NewScanner(file) // reading file
+	scanned.Split(bufio.ScanLines)
+
+	var lines []string
+
+	for scanned.Scan() {
+		lines = append(lines, scanned.Text())
+	}
+
+	file.Close()
+
+	asciiChrs := make(map[int][]string)
+	id := 31
+
+	for _, line := range lines {
+		if string(line) == "" {
+			id++
+		} else {
+			asciiChrs[id] = append(asciiChrs[id], line)
+		}
+	}
+
+	//	x := Newline(testReturn.textbox, asciiChrs)
+
+	//	fmt.Println("This is X:", x)
+
+	//fmt.Printf("%v", testReturn)
+	//fmt.Fprintf(w, x)
 
 	// s := []byte("helloworld")
 
 	// t, _ := template.ParseFiles("static/process.html")
 	// t.Execute(w, s)
+	tpl.ExecuteTemplate(w, "process.html", nil)
 
 }
 
@@ -94,4 +134,18 @@ func main() {
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
+}
+
+func Newline(n string, y map[int][]string) string {
+	// prints horizontally
+	var ascart []string
+
+	for j := 0; j < len(y[32]); j++ {
+		for _, letter := range n {
+			//fmt.Print(y[int(letter)][j])
+			ascart = append(ascart, (y[int(letter)][j]))
+		}
+		fmt.Println()
+	}
+	return "a" //strings.Join(ascart, "")
 }
