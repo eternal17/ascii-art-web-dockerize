@@ -20,7 +20,23 @@ func init() {
 	tpl = template.Must(template.ParseGlob("static/*.html"))
 }
 
-func bannerHandler(w http.ResponseWriter, r *http.Request) {
+// func bannerHandler(w http.ResponseWriter, r *http.Request) {
+
+// 	p := Banner{
+// 		Title: "SELECT BANNERFILE\n",
+// 		Ban1:  "Shadow\n",
+// 		Ban2:  "Standard\n",
+// 		Ban3:  "Thinkertoy\n",
+// 	}
+
+// 	//tpl.ExecuteTemplate(w, "index.html", nil)
+
+// 	t, _ := template.ParseFiles("static/index.html")
+// 	t.Execute(w, p)
+
+// }
+
+func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 	p := Banner{
 		Title: "SELECT BANNERFILE\n",
@@ -29,28 +45,17 @@ func bannerHandler(w http.ResponseWriter, r *http.Request) {
 		Ban3:  "Thinkertoy\n",
 	}
 
-	//tpl.ExecuteTemplate(w, "index.gohtml", nil)
+	//tpl.ExecuteTemplate(w, "index.html", nil)
 
 	t, _ := template.ParseFiles("static/index.html")
 	t.Execute(w, p)
-
-}
-
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-
-	if err := r.ParseForm(); err != nil {
-		fmt.Fprintf(w, "ParseForm() err: %v", err)
-		return
-	}
-
-	fmt.Fprintf(w, "<h1>ASCII WEB hOMEPAGE</h1>")
 }
 
 func processHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-		return
-	}
+	// if r.Method != "POST" {
+	// 	http.Redirect(w, r, "/", http.StatusSeeOther)
+	// 	return
+	// }
 
 	getban1 := r.FormValue("banner")
 	getban2 := r.FormValue("banner")
@@ -70,7 +75,12 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Printf("%v", testReturn)
+	fmt.Fprintf(w, testReturn.textbox)
 
+	// s := []byte("helloworld")
+
+	// t, _ := template.ParseFiles("static/process.html")
+	// t.Execute(w, s)
 
 }
 
@@ -79,11 +89,9 @@ func main() {
 	//server := http.FileServer(http.Dir("./static"))
 
 	http.HandleFunc("/", indexHandler)
-	http.HandleFunc("/process", processHandler)
-	http.HandleFunc("/banner/", bannerHandler)
+	http.HandleFunc("/ascii-art", processHandler)
+	//	http.HandleFunc("/banner/", bannerHandler)
 
-	if err := http.ListenAndServe(":8000", nil); err != nil {
-		log.Fatal(err)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 
-	}
 }

@@ -4,7 +4,7 @@
 	<head>			
 	 <meta charset="utf-8">
          <div>
-         <form id="bannerHeader" action="/process" method="POST">
+         <form id="bannerHeader" action="/ascii-art" method="GET">
 
         <p id=form-prompt>{{.Title}}</p>
 
@@ -20,7 +20,7 @@ name="banner" value={{.Ban2}}>
 name="banner" value={{.Ban3}}>
 <label for="ban3">{{.Ban3}}</label><br>
 
-<input type="text" name="textbox" action="/process" method = "POST">
+<input type="text" name="textbox" action="/ascii-art" method = "GET">
 
         <!-- <input type = "submit">  -->
 <input type= "submit" value="SUBMIT"/>
