@@ -22,22 +22,6 @@ func init() {
 	tpl = template.Must(template.ParseGlob("templates/*.html"))
 }
 
-// func bannerHandler(w http.ResponseWriter, r *http.Request) {
-
-// 	p := Banner{
-// 		Title: "SELECT BANNERFILE\n",
-// 		Ban1:  "Shadow\n",
-// 		Ban2:  "Standard\n",
-// 		Ban3:  "Thinkertoy\n",
-// 	}
-
-// 	//tpl.ExecuteTemplate(w, "index.html", nil)
-
-// 	t, _ := template.ParseFiles("static/index.html")
-// 	t.Execute(w, p)
-
-// }
-
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 	p := Banner{
@@ -49,15 +33,9 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 	tpl.ExecuteTemplate(w, "index.html", p)
 
-	// t, _ := template.ParseFiles("static/index.html")
-	// t.Execute(w, p)
 }
 
 func processHandler(w http.ResponseWriter, r *http.Request) {
-	// if r.Method != "POST" {
-	// 	http.Redirect(w, r, "/", http.StatusSeeOther)
-	// 	return
-	// }
 
 	getban1 := r.FormValue("banner")
 	getban2 := r.FormValue("banner")
@@ -133,8 +111,6 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	// opening a port and listening for instructions
-	//server := http.FileServer(http.Dir("./static"))
 
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/ascii-art", processHandler)
