@@ -19,7 +19,7 @@ type Banner struct {
 var tpl *template.Template
 
 func init() {
-	tpl = template.Must(template.ParseGlob("static/*.html"))
+	tpl = template.Must(template.ParseGlob("templates/*.html"))
 }
 
 // func bannerHandler(w http.ResponseWriter, r *http.Request) {
