@@ -47,10 +47,10 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		Ban3:  "Thinkertoy\n",
 	}
 
-	//tpl.ExecuteTemplate(w, "index.html", nil)
+	tpl.ExecuteTemplate(w, "index.html", p)
 
-	t, _ := template.ParseFiles("static/index.html")
-	t.Execute(w, p)
+	// t, _ := template.ParseFiles("static/index.html")
+	// t.Execute(w, p)
 }
 
 func processHandler(w http.ResponseWriter, r *http.Request) {
@@ -76,10 +76,25 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 		textbox: tbox,
 	}
 	//********************************************************
-	z := (testReturn.ban1 + ".txt")
-	fmt.Println(z)
 
-	file, err := os.Open("standard.txt")
+	fmt.Println("This is tban1:", testReturn.ban1)
+	h := testReturn.ban1 + ".txt"
+	fmt.Println("This is h:", h)
+
+	var bannerfile string
+	fmt.Println("This is tRB1:", testReturn.ban1)
+
+	if testReturn.ban1 == "Thinkertoy" {
+		bannerfile = "Thinkertoy.txt"
+	} else if testReturn.ban1 == "Shadow" {
+		bannerfile = "Shadow.txt"
+	} else {
+		bannerfile = "Thinkertoy.txt"
+	}
+
+	fmt.Println("This is Z:", bannerfile)
+
+	file, err := os.Open(bannerfile)
 	if err != nil {
 		fmt.Println("Usage: go run . [STRING] [BANNER]")
 		fmt.Println("EX: go run . something standard")
@@ -109,18 +124,11 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	//	x := Newline(testReturn.textbox, asciiChrs)
+	x := Newline(testReturn.textbox, asciiChrs)
 
-	//	fmt.Println("This is X:", x)
+	fmt.Fprintf(w, x)
 
-	//fmt.Printf("%v", testReturn)
-	//fmt.Fprintf(w, x)
-
-	// s := []byte("helloworld")
-
-	// t, _ := template.ParseFiles("static/process.html")
-	// t.Execute(w, s)
-	tpl.ExecuteTemplate(w, "process.html", nil)
+	tpl.ExecuteTemplate(w, "process.html", x)
 
 }
 
@@ -130,7 +138,6 @@ func main() {
 
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/ascii-art", processHandler)
-	//	http.HandleFunc("/banner/", bannerHandler)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
@@ -138,14 +145,17 @@ func main() {
 
 func Newline(n string, y map[int][]string) string {
 	// prints horizontally
-	var ascart []string
+	var empty string
 
+	//prints horizontally
 	for j := 0; j < len(y[32]); j++ {
+		var line string
 		for _, letter := range n {
-			//fmt.Print(y[int(letter)][j])
-			ascart = append(ascart, (y[int(letter)][j]))
+			line = line + string((y[int(letter)][j]))
 		}
-		fmt.Println()
+		empty += line + "\n"
+		line = ""
 	}
-	return "a" //strings.Join(ascart, "")
+	return empty
+
 }
