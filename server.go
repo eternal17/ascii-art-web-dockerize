@@ -58,7 +58,6 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	//********************************************************
 
-
 	var bannerfile string
 
 	if testReturn.ban1 == "Thinkertoy" {
@@ -68,7 +67,6 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		bannerfile = "Standard.txt"
 	}
-
 
 	file, err := os.Open(bannerfile)
 	if err != nil {
@@ -100,27 +98,12 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// var a string
-	// for _, line := range strings.Split(strings.TrimSuffix(testReturn.textbox, "\n"), "\n") {
-	// 	fmt.Println(line)
-	// 	a += line
-	// 	fmt.Println(a)
-	// }
+	fmt.Fprint(w, Newline(testReturn.textbox, asciiChrs))
 
-	// os.Exit(0)
-	// for _, chars := range a {
-	// 	fmt.Fprint(w, Newline(string(chars), asciiChrs))
-	// }
-	x := Newline(testReturn.textbox, asciiChrs)
+	// fmt.Println(Newline(testReturn.textbox, asciiChrs))
+	// x := Newline(testReturn.textbox, asciiChrs)
 
-	// y := (x + ("\n")) + x
-
-	// fmt.Fprintf(w, y)
-
-	fmt.Fprint(w, x)
-
-	//tpl.ExecuteTemplate(w, "process.html", y)
-
+	// tpl.ExecuteTemplate(w, "process.html", y)
 }
 
 func main() {
