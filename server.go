@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"net/http"
 	"os"
+	"strings"
 )
 
 type Banner struct {
@@ -98,12 +99,28 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	fmt.Fprint(w, Newline(testReturn.textbox, asciiChrs))
+	// fmt.Println(testReturn.textbox)
 
-	// fmt.Println(Newline(testReturn.textbox, asciiChrs))
+	// if strings.Contains(testReturn.textbox, "\n") {
+	// 	// y := Newline(a[1], asciiChrs)
+	// 	// fmt.Fprint(w, x)
+	// 	// fmt.Fprint(w, y)
+	// }
+
+	// y := Newline(a[1], asciiChrs)
+
+	// fmt.Fprint(w, x)
+	// fmt.Fprint(w, a[1])
 	// x := Newline(testReturn.textbox, asciiChrs)
+	// fmt.Fprint(w, x)
+	// fmt.Fprint(w, x)
+	// a := strings.Split(testReturn.textbox, "\n")
+	x := Newline(testReturn.textbox, asciiChrs)
+	// y := Newline(a[1], asciiChrs)
+	fmt.Fprint(w, x)
+	// fmt.Fprint(w, y)
 
-	// tpl.ExecuteTemplate(w, "process.html", y)
+	// tpl.ExecuteTemplate(w, "process.html", x)
 }
 
 func main() {
@@ -118,13 +135,30 @@ func Newline(n string, y map[int][]string) string {
 	var empty string
 
 	// prints horizontally
-	for j := 0; j < len(y[32]); j++ {
-		var line string
-		for _, letter := range n {
-			line = line + string((y[int(letter)][j]))
+	if strings.Contains(n, "\n") {
+		a := strings.Split(n, "\\n")
+		for j := 0; j < len(y[32]); j++ {
+			var line string
+			for _, letter := range a[0] {
+				line = line + string((y[int(letter)][j])) + "\n"
+			}
+			empty += line + "\n"
+			line = ""
+			for _, letter := range a[1] {
+				line = line + string((y[int(letter)][j]))
+			}
+			empty += line + "\n"
+			line = ""
 		}
-		empty += line + "\n"
-		line = ""
+	} else {
+		for j := 0; j < len(y[32]); j++ {
+			var line string
+			for _, letter := range n {
+				line = line + string((y[int(letter)][j]))
+			}
+			empty += line + "\n"
+			line = ""
+		}
 	}
 	return empty
 }
