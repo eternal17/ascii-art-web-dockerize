@@ -109,7 +109,7 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 	// }
 
 	// fmt.Println(a[1])
-	X := toAscii{Newline("test", asciiChrs), Newline("bbb", asciiChrs)}
+	X := toAscii{Newline(testReturn.textbox[:5], asciiChrs), Newline(testReturn.textbox[7:], asciiChrs)}
 	if err := tpl.ExecuteTemplate(w, "process.html", X); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
