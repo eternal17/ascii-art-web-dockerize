@@ -6,7 +6,6 @@ import (
 	"html/template"
 	"net/http"
 	"os"
-	"strings"
 )
 
 type Banner struct {
@@ -14,6 +13,11 @@ type Banner struct {
 	Ban1  string
 	Ban2  string
 	Ban3  string
+}
+
+type toAscii struct {
+	String1 string
+	String2 string
 }
 
 var tpl *template.Template
@@ -99,28 +103,16 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// fmt.Println(testReturn.textbox)
-
-	// if strings.Contains(testReturn.textbox, "\n") {
-	// 	// y := Newline(a[1], asciiChrs)
-	// 	// fmt.Fprint(w, x)
-	// 	// fmt.Fprint(w, y)
+	// a := strings.Split(testReturn.textbox, "\n")
+	// for _, ch := range strings.Split(testReturn.textbox, "\n") {
+	// 	a = append(a, string(ch))
 	// }
 
-	// y := Newline(a[1], asciiChrs)
-
-	// fmt.Fprint(w, x)
-	// fmt.Fprint(w, a[1])
-	// x := Newline(testReturn.textbox, asciiChrs)
-	// fmt.Fprint(w, x)
-	// fmt.Fprint(w, x)
-	// a := strings.Split(testReturn.textbox, "\n")
-	x := Newline(testReturn.textbox, asciiChrs)
-	// y := Newline(a[1], asciiChrs)
-	fmt.Fprint(w, x)
-	// fmt.Fprint(w, y)
-
-	// tpl.ExecuteTemplate(w, "process.html", x)
+	// fmt.Println(a[1])
+	X := toAscii{Newline("test", asciiChrs), Newline("bbb", asciiChrs)}
+	if err := tpl.ExecuteTemplate(w, "process.html", X); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 func main() {
@@ -135,30 +127,13 @@ func Newline(n string, y map[int][]string) string {
 	var empty string
 
 	// prints horizontally
-	if strings.Contains(n, "\n") {
-		a := strings.Split(n, "\\n")
-		for j := 0; j < len(y[32]); j++ {
-			var line string
-			for _, letter := range a[0] {
-				line = line + string((y[int(letter)][j])) + "\n"
-			}
-			empty += line + "\n"
-			line = ""
-			for _, letter := range a[1] {
-				line = line + string((y[int(letter)][j]))
-			}
-			empty += line + "\n"
-			line = ""
+	for j := 0; j < len(y[32]); j++ {
+		var line string
+		for _, letter := range n {
+			line = line + string((y[int(letter)][j]))
 		}
-	} else {
-		for j := 0; j < len(y[32]); j++ {
-			var line string
-			for _, letter := range n {
-				line = line + string((y[int(letter)][j]))
-			}
-			empty += line + "\n"
-			line = ""
-		}
+		empty += line + "\n"
+		line = ""
 	}
 	return empty
 }
