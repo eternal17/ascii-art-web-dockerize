@@ -103,13 +103,17 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// a := strings.Split(testReturn.textbox, "\n")
-	// for _, ch := range strings.Split(testReturn.textbox, "\n") {
-	// 	a = append(a, string(ch))
-	// }
+	// convert textbox to bytes to figure out where linebreak is (10)
+	b := []byte(testReturn.textbox)
+	count := 0
+	for _, num := range b {
+		count++
+		if num == 10 {
+			break
+		}
+	}
 
-	// fmt.Println(a[1])
-	X := toAscii{Newline(testReturn.textbox[:5], asciiChrs), Newline(testReturn.textbox[7:], asciiChrs)}
+	X := toAscii{Newline(testReturn.textbox[:count-2], asciiChrs), Newline(testReturn.textbox[count:], asciiChrs)}
 	if err := tpl.ExecuteTemplate(w, "process.html", X); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
