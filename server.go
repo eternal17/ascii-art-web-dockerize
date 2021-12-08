@@ -15,6 +15,11 @@ type Banner struct {
 	Ban3  string
 }
 
+type toAscii struct {
+	String1 string
+	String2 string
+}
+
 var tpl *template.Template
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
@@ -58,7 +63,6 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	//********************************************************
 
-
 	var bannerfile string
 
 	if testReturn.ban1 == "Thinkertoy" {
@@ -68,7 +72,6 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		bannerfile = "Standard.txt"
 	}
-
 
 	file, err := os.Open(bannerfile)
 	if err != nil {
@@ -100,27 +103,20 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// var a string
-	// for _, line := range strings.Split(strings.TrimSuffix(testReturn.textbox, "\n"), "\n") {
-	// 	fmt.Println(line)
-	// 	a += line
-	// 	fmt.Println(a)
-	// }
+	// convert textbox to bytes to figure out where linebreak is (10)
+	b := []byte(testReturn.textbox)
+	count := 0
+	for _, num := range b {
+		count++
+		if num == 10 {
+			break
+		}
+	}
 
-	// os.Exit(0)
-	// for _, chars := range a {
-	// 	fmt.Fprint(w, Newline(string(chars), asciiChrs))
-	// }
-	x := Newline(testReturn.textbox, asciiChrs)
-
-	// y := (x + ("\n")) + x
-
-	// fmt.Fprintf(w, y)
-
-	fmt.Fprint(w, x)
-
-	//tpl.ExecuteTemplate(w, "process.html", y)
-
+	X := toAscii{Newline(testReturn.textbox[:count-2], asciiChrs), Newline(testReturn.textbox[count:], asciiChrs)}
+	if err := tpl.ExecuteTemplate(w, "process.html", X); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 func main() {
