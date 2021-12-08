@@ -2,9 +2,9 @@
 <html>
    <head>
       <meta charset="utf-8">
-      <p id=form-prompt>{{.Title}}</p>
    </head>
    <body>
+      <p id=form-prompt>{{.Title}}</p>
       <div>
          <form id="bannerHeader" action="/ascii-art" method="POST">
             <input type="radio" id="ban1"
@@ -20,6 +20,9 @@
             <br>
             <input type= "submit" value="SUBMIT"/>
          </form>
+         <br>
+         <pre>{{.String1}}</pre> 
+         <pre>{{.String2}}</pre>
       </div>
    </body>
 </html>

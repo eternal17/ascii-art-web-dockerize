@@ -10,16 +10,23 @@ import (
 )
 
 type Banner struct {
-	Title string
-	Ban1  string
-	Ban2  string
-	Ban3  string
-}
-
-type toAscii struct {
+	Title   string
+	Ban1    string
+	Ban2    string
+	Ban3    string
 	String1 string
 	String2 string
 }
+
+// type toAscii struct {
+// 	String1 string
+// 	String2 string
+// }
+
+// type Output struct {
+// 	Banner  Banner
+// 	toAscii toAscii
+// }
 
 var tpl *template.Template
 
@@ -40,6 +47,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func processHandler(w http.ResponseWriter, r *http.Request) {
+
 	getban1 := r.FormValue("banner")
 	getban2 := r.FormValue("banner")
 	getban3 := r.FormValue("banner")
@@ -117,15 +125,35 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 	// checking if there is linebreak in string, returning the string seperated on 2 lines if there is
 	// 2nd line is an empty string if there isnt a line break
 	if strings.Contains(testReturn.textbox, "\n") {
-		X := toAscii{Newline(testReturn.textbox[:count-2], asciiChrs), Newline(testReturn.textbox[count:], asciiChrs)}
-		if err := tpl.ExecuteTemplate(w, "process.html", X); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+		p := Banner{
+			Title:   "SELECT BANNERFILE",
+			Ban1:    "Shadow",
+			Ban2:    "Standard",
+			Ban3:    "Thinkertoy",
+			String1: Newline(testReturn.textbox[:count-2], asciiChrs),
+			String2: Newline(testReturn.textbox[count:], asciiChrs),
 		}
+
+		err := tpl.ExecuteTemplate(w, "index.html", p)
+		fmt.Println(err)
+		// if err := tpl.ExecuteTemplate(w, "index.html", Y); err != nil {
+		// 	http.Error(w, err.Error(), http.StatusInternalServerError)
+		// }
 	} else {
-		X := toAscii{Newline(testReturn.textbox, asciiChrs), ""}
-		if err := tpl.ExecuteTemplate(w, "process.html", X); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+		p := Banner{
+			Title:   "SELECT BANNERFILE",
+			Ban1:    "Shadow",
+			Ban2:    "Standard",
+			Ban3:    "Thinkertoy",
+			String1: Newline(testReturn.textbox, asciiChrs),
+			String2: "",
 		}
+
+		err := tpl.ExecuteTemplate(w, "index.html", p)
+		fmt.Println(err)
+		// if err := tpl.ExecuteTemplate(w , "index.html", Y); err != nil {
+		// 	http.Error(w, err.Error(), http.StatusInternalServerError)
+		// }
 	}
 }
 
