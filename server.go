@@ -18,16 +18,6 @@ type Banner struct {
 	String2 string
 }
 
-// type toAscii struct {
-// 	String1 string
-// 	String2 string
-// }
-
-// type Output struct {
-// 	Banner  Banner
-// 	toAscii toAscii
-// }
-
 var tpl *template.Template
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
@@ -134,11 +124,11 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 			String2: Newline(testReturn.textbox[count:], asciiChrs),
 		}
 
-		err := tpl.ExecuteTemplate(w, "index.html", p)
-		fmt.Println(err)
-		// if err := tpl.ExecuteTemplate(w, "index.html", Y); err != nil {
-		// 	http.Error(w, err.Error(), http.StatusInternalServerError)
-		// }
+		// err := tpl.ExecuteTemplate(w, "index.html", p)
+		// fmt.Println(err)
+		if err := tpl.ExecuteTemplate(w, "index.html", p); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 	} else {
 		p := Banner{
 			Title:   "SELECT BANNERFILE",
@@ -149,11 +139,11 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 			String2: "",
 		}
 
-		err := tpl.ExecuteTemplate(w, "index.html", p)
-		fmt.Println(err)
-		// if err := tpl.ExecuteTemplate(w , "index.html", Y); err != nil {
-		// 	http.Error(w, err.Error(), http.StatusInternalServerError)
-		// }
+		// err := tpl.ExecuteTemplate(w, "index.html", p)
+		// fmt.Println(err)
+		if err := tpl.ExecuteTemplate(w, "index.html", p); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 	}
 }
 
