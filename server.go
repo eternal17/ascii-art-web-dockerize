@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"net/http"
 	"os"
+	"strings"
 )
 
 type Banner struct {
@@ -113,9 +114,18 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	X := toAscii{Newline(testReturn.textbox[:count-2], asciiChrs), Newline(testReturn.textbox[count:], asciiChrs)}
-	if err := tpl.ExecuteTemplate(w, "process.html", X); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	// checking if there is linebreak in string, returning the string seperated on 2 lines if there is
+	// 2nd line is an empty string if there isnt a line break
+	if strings.Contains(testReturn.textbox, "\n") {
+		X := toAscii{Newline(testReturn.textbox[:count-2], asciiChrs), Newline(testReturn.textbox[count:], asciiChrs)}
+		if err := tpl.ExecuteTemplate(w, "process.html", X); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+	} else {
+		X := toAscii{Newline(testReturn.textbox, asciiChrs), ""}
+		if err := tpl.ExecuteTemplate(w, "process.html", X); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 	}
 }
 
