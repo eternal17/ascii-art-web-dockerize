@@ -4,9 +4,10 @@
       <meta charset="utf-8">
    </head>
    <body>
-      <p id=form-prompt>{{.Title}}</p>
+      <h1>Ascii Art</h1>
       <div>
          <form id="bannerHeader" action="/ascii-art" method="POST">
+            <p>Select Banner Type</p>
             <input type="radio" id="ban1"
                name="banner" value={{.Ban1}}>
             <label for="ban1">{{.Ban1}}</label><br>
