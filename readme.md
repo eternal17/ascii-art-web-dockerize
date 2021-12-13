@@ -39,3 +39,6 @@ eternal17: https://git.learn.01founders.co/eternal17
 5. After pressing submit, the ascii art version is returned with the banner chosen.
 
 <img src="ascii.gif" alt="ascii gif" width="500" height="300">
+
+---
+
