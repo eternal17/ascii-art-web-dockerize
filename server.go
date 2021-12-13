@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"html/template"
 	"net/http"
 	"os"
@@ -30,6 +31,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	// handling any pages that are not the index or ascii-art (404 error)
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
+		fmt.Fprintf(w, "Status 404: Page Not Found")
 		return
 	}
 	tpl.ExecuteTemplate(w, "index.html", p)
@@ -44,8 +46,9 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 	tbox := r.FormValue("textbox")
 
 	// handling bad request status code
-	if len(getban1) == 0 && len(getban2) == 0 && len(getban3) == 0 || len(tbox) == 0 {
+	if len(getban1) == 0 && len(getban2) == 0 && len(getban3) == 0 || len(tbox) == 0 || strings.Contains(tbox, "£") {
 		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintf(w, "Status 400: Bad Request")
 		return
 	}
 
@@ -61,17 +64,13 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 		textbox: tbox,
 	}
 
-	var bannerfile string
+	file, err := os.Open(testReturn.ban1 + ".txt")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		fmt.Fprintf(w, "Status 500: Internal Server Error")
+		return
 
-	if testReturn.ban1 == "Thinkertoy" {
-		bannerfile = "Thinkertoy.txt"
-	} else if testReturn.ban1 == "Shadow" {
-		bannerfile = "Shadow.txt"
-	} else {
-		bannerfile = "Standard.txt"
 	}
-
-	file, _ := os.Open(bannerfile)
 
 	scanned := bufio.NewScanner(file) // reading file
 	scanned.Split(bufio.ScanLines)
