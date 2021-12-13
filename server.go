@@ -2,15 +2,14 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"html/template"
 	"net/http"
 	"os"
 	"strings"
 )
 
+// The banner struct contains the input from the user (selecting banner), and output (returned ascii, strings)
 type Banner struct {
-	Title   string
 	Ban1    string
 	Ban2    string
 	Ban3    string
@@ -20,12 +19,12 @@ type Banner struct {
 
 var tpl *template.Template
 
+// indexHandler writes the index template
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	p := Banner{
-		Title: "SELECT BANNERFILE",
-		Ban1:  "Shadow",
-		Ban2:  "Standard",
-		Ban3:  "Thinkertoy",
+		Ban1: "Shadow",
+		Ban2: "Standard",
+		Ban3: "Thinkertoy",
 	}
 
 	// handling any pages that are not the index or ascii-art (404 error)
@@ -36,6 +35,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	tpl.ExecuteTemplate(w, "index.html", p)
 }
 
+// processHandler receives data from user and writes the ascii version of a string
 func processHandler(w http.ResponseWriter, r *http.Request) {
 
 	getban1 := r.FormValue("banner")
@@ -60,7 +60,6 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 		ban3:    getban3,
 		textbox: tbox,
 	}
-	//********************************************************
 
 	var bannerfile string
 
@@ -72,13 +71,7 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 		bannerfile = "Standard.txt"
 	}
 
-	file, err := os.Open(bannerfile)
-	if err != nil {
-		fmt.Println("Usage: go run . [STRING] [BANNER]")
-		fmt.Println("EX: go run . something standard")
-		os.Exit(0)
-	}
-	defer file.Close()
+	file, _ := os.Open(bannerfile)
 
 	scanned := bufio.NewScanner(file) // reading file
 	scanned.Split(bufio.ScanLines)
@@ -116,49 +109,33 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 	// 2nd line is an empty string if there isnt a line break
 	if strings.Contains(testReturn.textbox, "\n") {
 		p := Banner{
-			Title:   "SELECT BANNERFILE",
 			Ban1:    "Shadow",
 			Ban2:    "Standard",
 			Ban3:    "Thinkertoy",
 			String1: Newline(testReturn.textbox[:count-2], asciiChrs),
 			String2: Newline(testReturn.textbox[count:], asciiChrs),
 		}
-
-		// err := tpl.ExecuteTemplate(w, "index.html", p)
-		// fmt.Println(err)
 		if err := tpl.ExecuteTemplate(w, "index.html", p); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	} else {
 		p := Banner{
-			Title:   "SELECT BANNERFILE",
 			Ban1:    "Shadow",
 			Ban2:    "Standard",
 			Ban3:    "Thinkertoy",
 			String1: Newline(testReturn.textbox, asciiChrs),
 			String2: "",
 		}
-
-		// err := tpl.ExecuteTemplate(w, "index.html", p)
-		// fmt.Println(err)
 		if err := tpl.ExecuteTemplate(w, "index.html", p); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	}
 }
 
-func main() {
-	tpl = template.Must(template.ParseGlob("templates/*.html"))
-	http.HandleFunc("/", indexHandler)
-	http.HandleFunc("/ascii-art", processHandler)
-	http.ListenAndServe(":8080", nil)
-}
-
+// Newline function returns the ascii art string horizontally
 func Newline(n string, y map[int][]string) string {
-	// prints horizontally
-	var empty string
 
-	// prints horizontally
+	var empty string
 	for j := 0; j < len(y[32]); j++ {
 		var line string
 		for _, letter := range n {
@@ -168,4 +145,12 @@ func Newline(n string, y map[int][]string) string {
 		line = ""
 	}
 	return empty
+}
+
+// main runs the api(server) and its respective handlers
+func main() {
+	tpl = template.Must(template.ParseGlob("templates/*.html"))
+	http.HandleFunc("/", indexHandler)
+	http.HandleFunc("/ascii-art", processHandler)
+	http.ListenAndServe(":8080", nil)
 }
