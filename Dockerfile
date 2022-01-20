@@ -3,6 +3,8 @@ RUN mkdir /app
 ADD . /app
 WORKDIR /app
 
+LABEL version="1.0"  Authors="tb38r && eternal17"
+
 COPY go.mod . 
 COPY Shadow.txt .
 COPY Standard.txt .
@@ -17,7 +19,7 @@ ENTRYPOINT ["/app/main"]
 # docker image ls *to ckeck*  **2nd step**
 #$ docker run -p 8080:8081 -it/ -tid(tty console, interactive,detach) name-of-app / **container created within this step*
 
-# To get rid off both, 
+# To get rid of both, 
 # Docker image prune -a (y/N) //docker images check
 # kill container (docker kill <name of container>) then 
 # docker container prune // docker ps(to check)
